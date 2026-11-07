@@ -1,0 +1,123 @@
+.dates {
+  display: grid;
+  grid-template-columns: 30px repeat(4, 1fr) 30px;
+  align-items: center;
+  gap: 3px;
+  padding: 16px 20px;
+  background: #fbfcfc;
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+}
+
+.dates button {
+  border: 0;
+  background: none;
+  color: #9baab4;
+  font-size: 22px;
+}
+
+.dates span,
+.dates > b {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 0;
+  color: #9aa7ae;
+  font-size: 15px;
+}
+
+.dates b {
+  color: #fff;
+  background: var(--navy);
+  border-radius: 7px;
+}
+
+.dates small {
+  font-size: 9px;
+}
+
+.appointments {
+  padding: 3px 21px 12px;
+}
+
+.appointments > div {
+  display: grid;
+  grid-template-columns: 43px 8px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  min-height: 58px;
+  border-bottom: 1px solid #f0f3f4;
+}
+
+.appointments > div:last-child {
+  border: 0;
+}
+
+.appointments time {
+  color: #81909b;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.appointments i {
+  width: 3px;
+  height: 28px;
+  border-radius: 3px;
+  background: #8bb3c7;
+}
+
+.appointments > div:nth-child(2) i {
+  background: #dbb579;
+}
+
+.appointments > div:nth-child(3) i {
+  background: #a999c8;
+}
+
+.appointments > div:nth-child(4) i {
+  background: #d89b9c;
+}
+
+.appointments b {
+  display: block;
+  color: var(--navy);
+  font-size: 12px;
+}
+
+.appointments small {
+  display: block;
+  margin-top: 4px;
+  color: #9aa7af;
+  font-size: 10px;
+}
+
+.schedule {
+  min-height: 408px;
+}
+
+.appointments > div > span:not([data-status]) {
+  min-width: 0;
+}
+
+@media (max-width: 760px) {
+  .dates {
+    padding: 11px 7px;
+  }
+
+  .dates span,
+  .dates > b {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .appointments > div {
+    grid-template-columns: 37px 6px 1fr auto;
+    gap: 7px;
+  }
+
+  .appointments [data-status] {
+    font-size: 8px;
+    padding: 4px;
+  }
+}

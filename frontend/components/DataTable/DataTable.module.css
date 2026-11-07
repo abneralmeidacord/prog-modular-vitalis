@@ -1,0 +1,96 @@
+.tableCard td > a {
+  color: var(--blue);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.tableCard {
+  overflow: auto;
+}
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+.toolbar input {
+  flex: 1;
+  max-width: 310px;
+  height: 31px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  font-size: 11px;
+  min-width: 170px;
+}
+
+.toolbar button {
+  min-height: 31px;
+  padding: 0 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: #758693;
+  font-size: 10px;
+}
+
+.tableCard table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  min-width: 650px;
+}
+
+.tableCard th {
+  padding: 11px 18px;
+  background: #fcfdfd;
+  color: #9aa7af;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.tableCard td {
+  padding: 13px 18px;
+  border-top: 1px solid #f0f3f4;
+  color: #83919b;
+  font-size: 11px;
+}
+
+.roomSummary {
+  display: flex;
+  gap: 42px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.roomSummary strong {
+  color: var(--navy);
+  font: 800 24px var(--font-heading);
+}
+
+.roomSummary small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font: 400 11px var(--font-body);
+}
+
+@media (max-width: 760px) {
+  .roomSummary {
+    gap: 18px;
+    justify-content: space-between;
+    padding: 17px;
+  }
+
+  .roomSummary strong {
+    font-size: 18px;
+  }
+
+  .roomSummary small {
+    font-size: 9px;
+  }
+}

@@ -1,0 +1,49 @@
+.timeline {
+  padding: 3px 21px;
+  background: #fff;
+  border: 1px solid #e0ebef;
+  border-radius: 11px;
+}
+
+.timeline p {
+  padding: 18px 0;
+  margin: 0;
+  max-width: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.timeline p:last-child {
+  border: 0;
+}
+
+.timeline i {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin: 0 8px 0 0;
+  border-radius: 50%;
+  background: #83b1c6;
+}
+
+.timeline b {
+  display: block;
+  margin-left: 20px;
+  color: var(--navy);
+  font-size: 11px;
+}
+
+.timeline small {
+  display: block;
+  margin-left: 20px;
+  margin-top: 4px;
+  color: #8c9ba4;
+  font-size: 10px;
+}
+
+.timeline span {
+  display: block;
+  margin-left: 20px;
+  margin-top: 9px;
+  color: #72818b;
+  font-size: 10px;
+}

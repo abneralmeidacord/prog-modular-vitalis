@@ -1,0 +1,47 @@
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  margin-bottom: 29px;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 22px;
+  margin-bottom: 25px;
+}
+
+.hero p,
+.sectionHead p {
+  margin: 7px 0 0;
+}
+
+.sectionHead h1 {
+  margin-top: 3px;
+}
+
+@media (max-width: 760px) {
+  .hero,
+  .sectionHead {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .hero h1 {
+    font-size: 23px;
+  }
+
+  .hero > a {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .sectionHead > a {
+    align-self: stretch;
+    justify-content: center;
+    width: 100%;
+  }
+}

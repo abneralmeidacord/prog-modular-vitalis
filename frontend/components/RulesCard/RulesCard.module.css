@@ -1,0 +1,50 @@
+.rules {
+  padding: 21px;
+}
+
+.rules h3 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  font-size: 14px;
+}
+
+.rules h3 span {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #eaf4f8;
+  color: var(--blue);
+  font: 700 12px var(--font-heading);
+}
+
+.rules p {
+  margin: 5px 0 15px;
+  font-size: 10px;
+}
+
+.rules li {
+  margin: 0 0 12px;
+  color: #71818b;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.rules[data-compact] {
+  align-self: start;
+}
+
+@media (max-width: 1100px) {
+  .rules[data-compact] {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .rules ul {
+    padding-left: 18px;
+  }
+}

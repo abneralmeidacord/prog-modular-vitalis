@@ -1,0 +1,88 @@
+.appShell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main {
+  width: calc(100% - var(--sidebar-width));
+  margin-left: var(--sidebar-width);
+}
+
+.topbar {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--page-padding-inline);
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+  color: #84919b;
+  font-size: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.topbar b {
+  margin: 0 10px;
+  color: #c0c9cf;
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  color: #546674;
+}
+
+.account > span {
+  margin-right: 8px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: #91a0a9;
+  font-size: 10px;
+  margin-top: 24px;
+}
+
+.footer span {
+  color: #b0babf;
+}
+
+@media (max-width: 760px) {
+  .appShell {
+    display: block;
+  }
+
+  .main {
+    width: 100%;
+    margin: 0;
+  }
+
+  .topbar {
+    height: 55px;
+    padding: 0 18px;
+  }
+
+  .account {
+    font-size: 0;
+  }
+
+  .footer {
+    flex-direction: column;
+    gap: 7px;
+  }
+}
+
+@media (max-width: 430px) {
+  .account > span {
+    margin: 0;
+  }
+
+  .topbar > span:first-child {
+    font-size: 10px;
+  }
+}

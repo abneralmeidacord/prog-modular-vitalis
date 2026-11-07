@@ -1,0 +1,35 @@
+.avatar {
+  width: 34px;
+  height: 34px;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 11px;
+  color: #fff;
+  font: 700 11px var(--font-heading);
+}
+
+.avatar[data-tone="blue"] {
+  background: #83acc3;
+}
+
+.avatar[data-tone="violet"] {
+  background: #9890be;
+}
+
+.avatar[data-tone="peach"] {
+  background: #d89f87;
+}
+
+.avatar[data-size="small"] {
+  width: 29px;
+  height: 29px;
+  border-radius: 9px;
+  font-size: 9px;
+}
+
+.avatar[data-size="large"] {
+  width: 52px;
+  height: 52px;
+  font-size: 15px;
+}

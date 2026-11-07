@@ -1,0 +1,39 @@
+.patientCard {
+  padding: 25px;
+}
+
+.patientCard h2 {
+  margin: 15px 0 3px;
+  color: var(--navy);
+  font: 800 21px var(--font-heading);
+}
+
+.patientCard p {
+  margin: 0 0 18px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.patientCard hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 20px 0;
+}
+
+.patientCard dl {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 22px;
+}
+
+.patientCard dt {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.patientCard dd {
+  margin: -7px 0 0;
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 12px;
+}

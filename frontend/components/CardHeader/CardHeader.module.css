@@ -1,0 +1,22 @@
+.cardHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px 22px 17px;
+  border-bottom: 1px solid var(--line);
+}
+
+.cardHead h2 {
+  font-size: 15px;
+}
+
+.cardHead p {
+  margin: 5px 0 0;
+  font-size: 11px;
+}
+
+.cardHead a {
+  color: var(--blue);
+  font-size: 11px;
+  font-weight: 700;
+}

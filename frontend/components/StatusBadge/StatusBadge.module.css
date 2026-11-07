@@ -1,0 +1,28 @@
+.ok {
+  background: #eaf6f0;
+  color: var(--green);
+}
+
+.wait {
+  background: #fcf4e5;
+  color: var(--amber);
+}
+
+.danger {
+  background: #fbeded;
+  color: var(--red);
+}
+
+.info {
+  background: #eaf4f8;
+  color: var(--blue);
+}
+
+.badge {
+  display: inline-block;
+  width: max-content;
+  padding: 5px 8px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 600;
+}
