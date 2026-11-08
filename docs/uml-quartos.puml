@@ -1,0 +1,138 @@
+
+@startuml
+
+title Vitalis - Sprint 2 - Diagrama UML de Quartos e Internacoes
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam linetype ortho
+hide empty members
+
+' ==========================================
+' TIPOS DE QUARTO
+' ==========================================
+
+enum TipoQuarto {
+    ENFERMARIA
+    ISOLAMENTO
+    UTI
+    SUITE
+    --
+    - capacidadeMaxima: int
+    + getCapacidadeMaxima(): int
+}
+
+note right of TipoQuarto
+    Capacidade maxima:
+    ENFERMARIA = 8
+    ISOLAMENTO = 1
+    UTI = 1
+    SUITE = 2
+end note
+
+' ==========================================
+' CLASSE QUARTO
+' ==========================================
+
+class Quarto {
+    - id: Long
+    - numero: String
+    - andar: String
+    - tipo: TipoQuarto
+    - capacidade: int
+    - ocupados: int
+    --
+    + Quarto(id: Long, numero: String, andar: String, tipo: TipoQuarto, capacidade: int)
+    + ocupar(): void
+    + liberar(): void
+    + getId(): Long
+    + getNumero(): String
+    + getAndar(): String
+    + getTipo(): TipoQuarto
+    + getCapacidade(): int
+    + getOcupados(): int
+    + getDisponiveis(): int
+    + isDisponivel(): boolean
+}
+
+' ==========================================
+' SERVICO DE QUARTOS
+' ==========================================
+
+class QuartoService <<Service>> {
+    - quartos: Map<Long, Quarto>
+    - sequencia: AtomicLong
+    --
+    + cadastrar(dados: Cadastro): Quarto
+    + listar(): List<Quarto>
+    + buscar(id: Long): Quarto
+    + listarDisponiveis(): List<Quarto>
+    + ocupar(id: Long): void
+    + liberar(id: Long): void
+}
+
+class "QuartoService.Cadastro" as Cadastro <<record>> {
+    + numero: String
+    + andar: String
+    + tipo: TipoQuarto
+    + capacidade: int
+}
+
+' ==========================================
+' INTERNACAO
+' ==========================================
+
+class Internacao {
+    - id: Long
+    - pacienteId: Long
+    - profissionalId: Long
+    - quartoId: Long
+    - dataEntrada: LocalDate
+    - dataAlta: LocalDate
+    - status: Status
+    --
+    + Internacao(id: Long, pacienteId: Long, profissionalId: Long, quartoId: Long)
+    + encerrar(): void
+    + getId(): Long
+    + getPacienteId(): Long
+    + getProfissionalId(): Long
+    + getQuartoId(): Long
+    + getDataEntrada(): LocalDate
+    + getDataAlta(): LocalDate
+    + getStatus(): Status
+}
+
+enum "Internacao.Status" as Status {
+    ATIVA
+    ENCERRADA
+}
+
+' ==========================================
+' EXCECOES
+' ==========================================
+
+class QuartoNaoEncontradoException
+
+' ==========================================
+' RELACIONAMENTOS
+' ==========================================
+
+Quarto --> TipoQuarto : possui tipo
+
+QuartoService "1" o-- "0..*" Quarto : gerencia
+
+QuartoService ..> Cadastro : utiliza
+
+QuartoService ..> QuartoNaoEncontradoException : lanca
+
+Internacao --> Status : possui estado
+
+Internacao "0..*" ..> "1" Quarto : referencia por ID
+
+note on link
+    Internacao armazena quartoId.
+    A associacao e logica,
+    sem referencia direta ao objeto Quarto.
+end note
+
+@enduml
