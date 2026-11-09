@@ -1,6 +1,9 @@
-package br.com.vitalis.profissionais;
+package br.com.vitalis.Consultas;
 
 import java.time.LocalDateTime;
+
+import br.com.vitalis.profissionais.ClinicoGeral;
+import br.com.vitalis.profissionais.DadosInvalidosException;
 
 public record ConsultaClinica(ClinicoGeral clinico, long pacienteId, LocalDateTime dataHora, String motivo, Tipo tipo) {
     public enum Tipo {
@@ -11,7 +14,7 @@ public record ConsultaClinica(ClinicoGeral clinico, long pacienteId, LocalDateTi
         if (clinico == null || dataHora == null || tipo == null) {
             throw new DadosInvalidosException("Clínico, data, horário e tipo são obrigatórios.");
         }
-        Validacao.pacienteObrigatorio(pacienteId);
-        motivo = Validacao.textoObrigatorio(motivo, "Motivo");
+        ValidacaoConsulta.pacienteObrigatorio(pacienteId);
+        motivo = ValidacaoConsulta.textoObrigatorio(motivo, "Motivo");
     }
 }

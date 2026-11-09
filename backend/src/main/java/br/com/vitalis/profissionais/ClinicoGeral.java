@@ -1,6 +1,7 @@
 package br.com.vitalis.profissionais;
 
 import java.time.LocalDateTime;
+import br.com.vitalis.Consultas.ConsultaClinica;
 
 public class ClinicoGeral extends Profissional implements AtendimentoClinico {
     public ClinicoGeral(long id, String nome, String registro, String telefone, String email, boolean disponivel) {
