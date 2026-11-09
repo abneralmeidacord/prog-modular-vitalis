@@ -1,7 +1,6 @@
 package br.com.vitalis.entity;
 
-import br.com.vitalis.exceptions.DadosProfissionaisInvalidosException;
-import br.com.vitalis.model.ValidacaoProfissional;
+import br.com.vitalis.model.Validacao;
 
 public abstract class Profissional {
     public enum Categoria {
@@ -17,13 +16,10 @@ public abstract class Profissional {
 
     protected Profissional(long id, String nome, String registro, String telefone, String email, boolean disponivel) {
         this.id = id;
-        this.nome = ValidacaoProfissional.textoObrigatorio(nome, "Nome");
-        this.registro = ValidacaoProfissional.textoObrigatorio(registro, "Registro profissional");
-        this.telefone = ValidacaoProfissional.textoObrigatorio(telefone, "Telefone");
-        this.email = ValidacaoProfissional.textoObrigatorio(email, "E-mail");
-        if (!this.email.matches("[^\\s@]+@[^\\s@]+\\.[^\\s@]+")) {
-            throw new DadosProfissionaisInvalidosException("E-mail inválido.");
-        }
+        this.nome = Validacao.textoObrigatorio(nome, "Nome");
+        this.registro = Validacao.textoObrigatorio(registro, "Registro profissional");
+        this.telefone = Validacao.textoObrigatorio(telefone, "Telefone");
+        this.email = Validacao.emailObrigatorio(email);
         this.disponivel = disponivel;
     }
 

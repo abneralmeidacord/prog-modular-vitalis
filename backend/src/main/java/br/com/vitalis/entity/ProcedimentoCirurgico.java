@@ -3,7 +3,7 @@ package br.com.vitalis.entity;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import br.com.vitalis.model.StatusCirurgia;
+import br.com.vitalis.model.StatusAtendimento;
 
 public class ProcedimentoCirurgico extends Atendimento {
     private final String descricao;
@@ -12,7 +12,7 @@ public class ProcedimentoCirurgico extends Atendimento {
     private String observacoesPreOperatorias = "";
     private String observacoesPosOperatorias = "";
     private LocalDateTime dataHoraEfetiva;
-    private StatusCirurgia status = StatusCirurgia.AGENDADO;
+    private StatusAtendimento status = StatusAtendimento.AGENDADO;
 
     public ProcedimentoCirurgico(long id, Paciente paciente, Cirurgiao cirurgiao,
                                  String descricao, String tipo,
@@ -45,7 +45,7 @@ public class ProcedimentoCirurgico extends Atendimento {
         return dataHoraEfetiva;
     }
 
-    public StatusCirurgia getStatus() {
+    public StatusAtendimento getStatus() {
         return status;
     }
 
@@ -66,28 +66,28 @@ public class ProcedimentoCirurgico extends Atendimento {
     }
 
     public void iniciar(LocalDateTime dataHora) {
-        if (status != StatusCirurgia.AGENDADO) {
+        if (status != StatusAtendimento.AGENDADO) {
             throw new IllegalStateException("A cirurgia precisa estar agendada para iniciar");
         }
 
         dataHoraEfetiva = Objects.requireNonNull(dataHora, "Data e hora efetivas obrigatórias");
-        status = StatusCirurgia.EM_ANDAMENTO;
+        status = StatusAtendimento.EM_ANDAMENTO;
     }
 
     public void concluir() {
-        if (status != StatusCirurgia.EM_ANDAMENTO) {
+        if (status != StatusAtendimento.EM_ANDAMENTO) {
             throw new IllegalStateException("A cirurgia precisa ser iniciada antes de concluir");
         }
 
-        status = StatusCirurgia.CONCLUIDO;
+        status = StatusAtendimento.CONCLUIDO;
     }
 
     public void cancelar() {
-        if (status != StatusCirurgia.AGENDADO) {
+        if (status != StatusAtendimento.AGENDADO) {
             throw new IllegalStateException("A cirurgia precisa estar agendada para cancelar");
         }
 
-        status = StatusCirurgia.CANCELADO;
+        status = StatusAtendimento.CANCELADO;
     }
 
     private static String validarTexto(String texto, String campo) {

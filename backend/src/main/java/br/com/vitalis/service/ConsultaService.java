@@ -1,5 +1,6 @@
 package br.com.vitalis.service;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,43 +15,51 @@ import br.com.vitalis.entity.Especialista;
 import br.com.vitalis.entity.Profissional;
 import br.com.vitalis.exceptions.ConsultaConflitoException;
 import br.com.vitalis.exceptions.ConsultaNaoEncontradaException;
-import br.com.vitalis.exceptions.DadosProfissionaisInvalidosException;
+import br.com.vitalis.exceptions.DadosInvalidosException;
 import br.com.vitalis.model.ConcluirConsultaRequest;
 import br.com.vitalis.model.ConsultaRegistrada;
 import br.com.vitalis.model.CriarConsultaRequest;
 import br.com.vitalis.model.ReagendarConsultaRequest;
+import br.com.vitalis.model.StatusAtendimento;
+import br.com.vitalis.model.Validacao;
 
 @Service
 public class ConsultaService {
     private final ProfissionalService profissionalService;
+    private final PacienteService pacienteService;
     private final Map<Long, Consulta> consultas = new LinkedHashMap<>();
     private long proximoId = 1;
 
-    public ConsultaService(ProfissionalService profissionalService) {
+    public ConsultaService(ProfissionalService profissionalService, PacienteService pacienteService) {
         this.profissionalService = profissionalService;
+        this.pacienteService = pacienteService;
     }
 
     public synchronized ConsultaRegistrada cadastrar(CriarConsultaRequest request) {
         if (request == null || request.tipo() == null) {
-            throw new DadosProfissionaisInvalidosException("Tipo de consulta é obrigatório.");
+            throw new DadosInvalidosException("Tipo de consulta é obrigatório.");
         }
 
         Profissional profissional = profissionalService.buscar(request.profissionalId());
+        Validacao.pacienteObrigatorio(request.pacienteId());
+        pacienteService.buscar(request.pacienteId());
 
         Consulta consulta = switch (request.tipo()) {
             case ROTINA -> criarConsultaRotina(request, profissional);
             case ESPECIALIZADA -> criarConsultaEspecializada(request, profissional);
         };
 
+        validarHorario(profissional.getId(), consulta.getDataHoraInicio(), null);
         long id = proximoId++;
         consultas.put(id, consulta);
 
         return registrar(id, consulta);
     }
 
-    public synchronized List<ConsultaRegistrada> listar() {
+    public synchronized List<ConsultaRegistrada> listar(Long pacienteId) {
         return consultas.entrySet()
                 .stream()
+                .filter(entrada -> pacienteId == null || entrada.getValue().getPacienteId() == pacienteId)
                 .map(entrada -> registrar(entrada.getKey(), entrada.getValue()))
                 .toList();
     }
@@ -70,11 +79,14 @@ public class ConsultaService {
             ReagendarConsultaRequest request) {
 
         if (request == null) {
-            throw new DadosProfissionaisInvalidosException(
+            throw new DadosInvalidosException(
                     "Nova data e novo horário são obrigatórios.");
         }
 
         Consulta consulta = exigirConsulta(id);
+        if (request.data() != null && request.horario() != null) {
+            validarHorario(consulta.getProfissional().getId(), LocalDateTime.of(request.data(), request.horario()), consulta);
+        }
         consulta.reagendar(request.data(), request.horario());
         return registrar(id, consulta);
     }
@@ -90,7 +102,7 @@ public class ConsultaService {
             ConcluirConsultaRequest request) {
 
         if (request == null) {
-            throw new DadosProfissionaisInvalidosException(
+            throw new DadosInvalidosException(
                     "As observações da consulta são obrigatórias.");
         }
 
@@ -109,6 +121,17 @@ public class ConsultaService {
         Consulta consulta = exigirConsulta(id);
         consulta.registrarNaoComparecimento();
         return registrar(id, consulta);
+    }
+
+    private void validarHorario(long profissionalId, LocalDateTime horario, Consulta reagendada) {
+        boolean ocupado = consultas.values().stream()
+                .filter(consulta -> consulta != reagendada && consulta.getProfissional().getId() == profissionalId)
+                .filter(consulta -> consulta.getStatus() != StatusAtendimento.CANCELADO
+                        && consulta.getStatus() != StatusAtendimento.NAO_COMPARECEU)
+                .anyMatch(consulta -> consulta.getDataHoraInicio().equals(horario));
+        if (ocupado) {
+            throw new ConsultaConflitoException("O profissional já possui uma consulta neste horário.");
+        }
     }
 
     private Consulta criarConsultaRotina(

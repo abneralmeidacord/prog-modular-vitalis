@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
-import br.com.vitalis.exceptions.DadosProfissionaisInvalidosException;
+import br.com.vitalis.exceptions.DadosInvalidosException;
 import br.com.vitalis.model.ConsultaClinica;
 import br.com.vitalis.model.Encaminhamento;
 import br.com.vitalis.model.VinculoCirurgico;
@@ -28,8 +28,8 @@ class ProfissionalTest {
         assertEquals(new ConsultaClinica(clinico, 7, dataHora, "Acompanhamento", ConsultaClinica.Tipo.ROTINA), rotina);
         assertEquals(ConsultaClinica.Tipo.AVALIACAO_INICIAL, avaliacao.tipo());
         assertEquals(new Encaminhamento(clinico, 7, "Cardiologia", "Avaliação especializada"), encaminhamento);
-        assertThrows(DadosProfissionaisInvalidosException.class, () -> atendimento.encaminhar(7, " ", "Avaliação"));
-        assertThrows(DadosProfissionaisInvalidosException.class, () -> atendimento.consultarRotina(0, dataHora, "Retorno"));
+        assertThrows(DadosInvalidosException.class, () -> atendimento.encaminhar(7, " ", "Avaliação"));
+        assertThrows(DadosInvalidosException.class, () -> atendimento.consultarRotina(0, dataHora, "Retorno"));
     }
 
     @Test
@@ -44,7 +44,7 @@ class ProfissionalTest {
         assertEquals(7, vinculo.pacienteId());
         assertEquals(dataHora, vinculo.dataHora());
         assertEquals("Apendicectomia", vinculo.descricao());
-        assertThrows(DadosProfissionaisInvalidosException.class, () -> atuacao.vincularProcedimento(7, null, "Apendicectomia"));
-        assertThrows(DadosProfissionaisInvalidosException.class, () -> atuacao.vincularProcedimento(7, dataHora, " "));
+        assertThrows(DadosInvalidosException.class, () -> atuacao.vincularProcedimento(7, null, "Apendicectomia"));
+        assertThrows(DadosInvalidosException.class, () -> atuacao.vincularProcedimento(7, dataHora, " "));
     }
 }

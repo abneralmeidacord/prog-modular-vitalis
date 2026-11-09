@@ -10,11 +10,11 @@ import br.com.vitalis.entity.Cirurgiao;
 import br.com.vitalis.entity.ClinicoGeral;
 import br.com.vitalis.entity.Especialista;
 import br.com.vitalis.entity.Profissional;
-import br.com.vitalis.exceptions.DadosProfissionaisInvalidosException;
+import br.com.vitalis.exceptions.DadosInvalidosException;
 import br.com.vitalis.exceptions.ProfissionalNaoEncontradoException;
 import br.com.vitalis.exceptions.RegistroDuplicadoException;
 import br.com.vitalis.model.CadastroProfissional;
-import br.com.vitalis.model.ValidacaoProfissional;
+import br.com.vitalis.model.Validacao;
 
 @Service
 public class ProfissionalService {
@@ -23,7 +23,7 @@ public class ProfissionalService {
 
     public synchronized Profissional cadastrar(CadastroProfissional cadastro) {
         if (cadastro.categoria() == null) {
-            throw new DadosProfissionaisInvalidosException("Categoria é obrigatória.");
+            throw new DadosInvalidosException("Categoria é obrigatória.");
         }
         boolean disponivel = !Boolean.FALSE.equals(cadastro.disponivel());
         Profissional profissional = switch (cadastro.categoria()) {
@@ -47,7 +47,7 @@ public class ProfissionalService {
         if (area == null) {
             return List.copyOf(profissionais.values());
         }
-        String areaBuscada = ValidacaoProfissional.textoObrigatorio(area, "Área");
+        String areaBuscada = Validacao.textoObrigatorio(area, "Área");
         return profissionais.values().stream()
                 .filter(Profissional::isDisponivel)
                 .filter(profissional -> profissional.getArea().equalsIgnoreCase(areaBuscada))

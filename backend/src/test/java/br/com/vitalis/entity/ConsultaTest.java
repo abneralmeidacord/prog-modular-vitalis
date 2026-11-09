@@ -10,8 +10,8 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.Test;
 
 import br.com.vitalis.exceptions.ConsultaConflitoException;
-import br.com.vitalis.exceptions.DadosProfissionaisInvalidosException;
-import br.com.vitalis.model.StatusConsulta;
+import br.com.vitalis.exceptions.DadosInvalidosException;
+import br.com.vitalis.model.StatusAtendimento;
 
 class ConsultaTest {
     private final ClinicoGeral clinico = new ClinicoGeral(
@@ -32,7 +32,7 @@ class ConsultaTest {
 
         assertEquals(7, consulta.getPacienteId());
         assertSame(clinico, consulta.getProfissional());
-        assertEquals(StatusConsulta.AGENDADA, consulta.getStatus());
+        assertEquals(StatusAtendimento.AGENDADO, consulta.getStatus());
         assertEquals("Acompanhamento", consulta.getMotivo());
     }
 
@@ -47,7 +47,7 @@ class ConsultaTest {
 
         assertSame(cardiologista, consulta.getProfissional());
         assertEquals("cardiologia", consulta.getEspecialidade());
-        assertEquals(StatusConsulta.AGENDADA, consulta.getStatus());
+        assertEquals(StatusAtendimento.AGENDADO, consulta.getStatus());
     }
 
     @Test
@@ -66,13 +66,13 @@ class ConsultaTest {
         ConsultaRotina consulta = criarConsultaRotina();
 
         consulta.confirmar();
-        assertEquals(StatusConsulta.CONFIRMADA, consulta.getStatus());
+        assertEquals(StatusAtendimento.CONFIRMADO, consulta.getStatus());
 
         consulta.realizar();
-        assertEquals(StatusConsulta.EM_ATENDIMENTO, consulta.getStatus());
+        assertEquals(StatusAtendimento.EM_ANDAMENTO, consulta.getStatus());
 
         consulta.concluir("Paciente orientado");
-        assertEquals(StatusConsulta.CONCLUIDA, consulta.getStatus());
+        assertEquals(StatusAtendimento.CONCLUIDO, consulta.getStatus());
         assertEquals("Paciente orientado", consulta.getObservacoes());
     }
 
@@ -86,7 +86,7 @@ class ConsultaTest {
 
         assertEquals(novaData, consulta.getData());
         assertEquals(novoHorario, consulta.getHorario());
-        assertEquals(StatusConsulta.AGENDADA, consulta.getStatus());
+        assertEquals(StatusAtendimento.AGENDADO, consulta.getStatus());
     }
 
     @Test
@@ -109,19 +109,19 @@ class ConsultaTest {
         assertThrows(ConsultaConflitoException.class, () ->
                 consulta.concluir("Não deve ser registrado"));
 
-        assertEquals(StatusConsulta.CANCELADA, consulta.getStatus());
+        assertEquals(StatusAtendimento.CANCELADO, consulta.getStatus());
     }
 
     @Test
     void rejeitaPacienteInvalidoECamposObrigatoriosAusentes() {
-        assertThrows(DadosProfissionaisInvalidosException.class, () ->
+        assertThrows(DadosInvalidosException.class, () ->
                 new ConsultaRotina(
                         0, clinico,
                         LocalDate.of(2026, 11, 10),
                         LocalTime.of(10, 30),
                         "Acompanhamento"));
 
-        assertThrows(DadosProfissionaisInvalidosException.class, () ->
+        assertThrows(DadosInvalidosException.class, () ->
                 new ConsultaRotina(
                         7, clinico,
                         LocalDate.of(2026, 11, 10),

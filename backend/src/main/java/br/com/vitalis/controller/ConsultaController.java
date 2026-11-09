@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.vitalis.model.ConcluirConsultaRequest;
@@ -38,8 +39,8 @@ public class ConsultaController {
     }
 
     @GetMapping
-    public List<ConsultaRegistrada> listar() {
-        return service.listar();
+    public List<ConsultaRegistrada> listar(@RequestParam(name = "pacienteId", required = false) Long pacienteId) {
+        return service.listar(pacienteId);
     }
 
     @GetMapping("/{id}")

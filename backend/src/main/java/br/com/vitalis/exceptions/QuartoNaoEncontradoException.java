@@ -1,7 +1,7 @@
 package br.com.vitalis.exceptions;
 
 public class QuartoNaoEncontradoException
-        extends RuntimeException {
+        extends RecursoNaoEncontradoException {
 
     public QuartoNaoEncontradoException(String mensagem) {
         super(mensagem);

@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 import br.com.vitalis.model.PrioridadeEmergencia;
-import br.com.vitalis.model.StatusEmergencia;
+import br.com.vitalis.model.StatusAtendimento;
 
 public class AtendimentoEmergencial extends Atendimento {
     private final PrioridadeEmergencia prioridade;
-    private StatusEmergencia status = StatusEmergencia.AGUARDANDO_AVALIACAO;
+    private StatusAtendimento status = StatusAtendimento.AGUARDANDO_AVALIACAO;
     private LocalDateTime dataHoraInicio;
 
     public AtendimentoEmergencial(long id, Paciente paciente, Profissional profissional,
@@ -21,7 +21,7 @@ public class AtendimentoEmergencial extends Atendimento {
         return prioridade;
     }
 
-    public StatusEmergencia getStatus() {
+    public StatusAtendimento getStatus() {
         return status;
     }
 
@@ -31,19 +31,19 @@ public class AtendimentoEmergencial extends Atendimento {
     }
 
     public void iniciar(LocalDateTime dataHora) {
-        if (status != StatusEmergencia.AGUARDANDO_AVALIACAO) {
+        if (status != StatusAtendimento.AGUARDANDO_AVALIACAO) {
             throw new IllegalStateException("A emergência precisa estar aguardando avaliação");
         }
 
         dataHoraInicio = Objects.requireNonNull(dataHora, "Data e hora de início obrigatórias");
-        status = StatusEmergencia.INICIADO;
+        status = StatusAtendimento.EM_ANDAMENTO;
     }
 
     public void concluir() {
-        if (status != StatusEmergencia.INICIADO) {
+        if (status != StatusAtendimento.EM_ANDAMENTO) {
             throw new IllegalStateException("A emergência precisa ser iniciada antes de concluir");
         }
 
-        status = StatusEmergencia.CONCLUIDO;
+        status = StatusAtendimento.CONCLUIDO;
     }
 }

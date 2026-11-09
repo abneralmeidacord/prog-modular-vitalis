@@ -4,10 +4,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.vitalis.exceptions.ConsultaConflitoException;
-import br.com.vitalis.exceptions.DadosProfissionaisInvalidosException;
-import br.com.vitalis.model.StatusConsulta;
-import br.com.vitalis.model.ValidacaoConsulta;
+import br.com.vitalis.exceptions.DadosInvalidosException;
+import br.com.vitalis.model.StatusAtendimento;
+import br.com.vitalis.model.Validacao;
 
 public abstract class Consulta {
     private final long pacienteId;
@@ -15,30 +18,30 @@ public abstract class Consulta {
     private LocalDate data;
     private LocalTime horario;
     private final String motivo;
-    private StatusConsulta status;
+    private StatusAtendimento status;
     private String observacoes;
 
     protected Consulta(long pacienteId, Profissional profissional, LocalDate data, LocalTime horario, String motivo) {
 
-        ValidacaoConsulta.pacienteObrigatorio(pacienteId);
+        Validacao.pacienteObrigatorio(pacienteId);
 
         if (profissional == null) {
-            throw new DadosProfissionaisInvalidosException(
+            throw new DadosInvalidosException(
                     "Profissional responsável é obrigatório.");
         }
         if (data == null) {
-            throw new DadosProfissionaisInvalidosException("Data da consulta é obrigatória.");
+            throw new DadosInvalidosException("Data da consulta é obrigatória.");
         }
         if (horario == null) {
-            throw new DadosProfissionaisInvalidosException("Horário da consulta é obrigatório.");
+            throw new DadosInvalidosException("Horário da consulta é obrigatório.");
         }
 
         this.pacienteId = pacienteId;
         this.profissional = profissional;
         this.data = data;
         this.horario = horario;
-        this.motivo = ValidacaoConsulta.textoObrigatorio(motivo, "Motivo");
-        this.status = StatusConsulta.AGENDADA;
+        this.motivo = Validacao.textoObrigatorio(motivo, "Motivo");
+        this.status = StatusAtendimento.AGENDADO;
         this.observacoes = "";
     }
 
@@ -62,8 +65,21 @@ public abstract class Consulta {
         return motivo;
     }
 
-    public StatusConsulta getStatus() {
+    @JsonIgnore
+    public StatusAtendimento getStatus() {
         return status;
+    }
+
+    @JsonGetter("status")
+    public String statusParaApi() {
+        return switch (status) {
+            case AGENDADO -> "AGENDADA";
+            case CONFIRMADO -> "CONFIRMADA";
+            case EM_ANDAMENTO -> "EM_ATENDIMENTO";
+            case CONCLUIDO -> "CONCLUIDA";
+            case CANCELADO -> "CANCELADA";
+            default -> status.name();
+        };
     }
 
     public String getObservacoes() {
@@ -74,54 +90,54 @@ public abstract class Consulta {
         return LocalDateTime.of(data, horario);
     }
 
-    private void validarStatus(StatusConsulta... permitidos) {
-        for (StatusConsulta permitido : permitidos) {
+    private void validarStatus(StatusAtendimento... permitidos) {
+        for (StatusAtendimento permitido : permitidos) {
             if (status == permitido) {
                 return;
             }
         }
 
         throw new ConsultaConflitoException(
-                "Operação inválida para uma consulta com status " + status + ".");
+                "Operação inválida para uma consulta com status " + statusParaApi() + ".");
     }
 
     public void confirmar() {
-        validarStatus(StatusConsulta.AGENDADA);
-        status = StatusConsulta.CONFIRMADA;
+        validarStatus(StatusAtendimento.AGENDADO);
+        status = StatusAtendimento.CONFIRMADO;
     }
 
     public void reagendar(LocalDate novaData, LocalTime novoHorario) {
-        validarStatus(StatusConsulta.AGENDADA, StatusConsulta.CONFIRMADA);
+        validarStatus(StatusAtendimento.AGENDADO, StatusAtendimento.CONFIRMADO);
 
         if (novaData == null || novoHorario == null) {
-            throw new DadosProfissionaisInvalidosException(
+            throw new DadosInvalidosException(
                     "Nova data e novo horário são obrigatórios.");
         }
 
         this.data = novaData;
         this.horario = novoHorario;
-        this.status = StatusConsulta.AGENDADA;
+        this.status = StatusAtendimento.AGENDADO;
     }
 
     public void realizar() {
-        validarStatus(StatusConsulta.AGENDADA, StatusConsulta.CONFIRMADA);
-        status = StatusConsulta.EM_ATENDIMENTO;
+        validarStatus(StatusAtendimento.AGENDADO, StatusAtendimento.CONFIRMADO);
+        status = StatusAtendimento.EM_ANDAMENTO;
     }
 
     public void concluir(String observacoes) {
-        validarStatus(StatusConsulta.EM_ATENDIMENTO);
+        validarStatus(StatusAtendimento.EM_ANDAMENTO);
 
         this.observacoes = observacoes == null ? "" : observacoes.strip();
-        status = StatusConsulta.CONCLUIDA;
+        status = StatusAtendimento.CONCLUIDO;
     }
 
     public void cancelar() {
-        validarStatus(StatusConsulta.AGENDADA, StatusConsulta.CONFIRMADA);
-        status = StatusConsulta.CANCELADA;
+        validarStatus(StatusAtendimento.AGENDADO, StatusAtendimento.CONFIRMADO);
+        status = StatusAtendimento.CANCELADO;
     }
 
     public void registrarNaoComparecimento() {
-        validarStatus(StatusConsulta.AGENDADA, StatusConsulta.CONFIRMADA);
-        status = StatusConsulta.NAO_COMPARECEU;
+        validarStatus(StatusAtendimento.AGENDADO, StatusAtendimento.CONFIRMADO);
+        status = StatusAtendimento.NAO_COMPARECEU;
     }
 }

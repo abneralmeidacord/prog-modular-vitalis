@@ -1,6 +1,6 @@
 package br.com.vitalis.entity;
 
-import br.com.vitalis.model.ValidacaoProfissional;
+import br.com.vitalis.model.Validacao;
 
 public class Especialista extends Profissional {
     private final String especialidade;
@@ -8,7 +8,7 @@ public class Especialista extends Profissional {
     public Especialista(long id, String nome, String registro, String telefone, String email, boolean disponivel,
                         String especialidade) {
         super(id, nome, registro, telefone, email, disponivel);
-        this.especialidade = ValidacaoProfissional.textoObrigatorio(especialidade, "Especialidade");
+        this.especialidade = Validacao.textoObrigatorio(especialidade, "Especialidade");
     }
 
     @Override

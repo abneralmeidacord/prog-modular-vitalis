@@ -15,6 +15,12 @@ public final class Validacao {
         return valor.strip();
     }
 
+    public static void pacienteObrigatorio(long pacienteId) {
+        if (pacienteId <= 0) {
+            throw new DadosInvalidosException("Informe um ID de paciente válido.");
+        }
+    }
+
     public static String textoOpcional(String valor) {
         return valor == null || valor.isBlank() ? null : valor.strip();
     }
@@ -26,8 +32,15 @@ public final class Validacao {
         return valor;
     }
 
+    public static String emailObrigatorio(String email) {
+        return validarEmail(textoObrigatorio(email, "E-mail"));
+    }
+
     public static String emailOpcional(String email) {
-        String valor = textoOpcional(email);
+        return validarEmail(textoOpcional(email));
+    }
+
+    private static String validarEmail(String valor) {
         if (valor != null && !valor.matches(FORMATO_EMAIL)) {
             throw new DadosInvalidosException("E-mail inválido.");
         }

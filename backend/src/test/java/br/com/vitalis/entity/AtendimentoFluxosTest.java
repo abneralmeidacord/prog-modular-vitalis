@@ -10,8 +10,7 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
 import br.com.vitalis.model.PrioridadeEmergencia;
-import br.com.vitalis.model.StatusCirurgia;
-import br.com.vitalis.model.StatusEmergencia;
+import br.com.vitalis.model.StatusAtendimento;
 
 class AtendimentoFluxosTest {
     private final Paciente paciente = criarPaciente();
@@ -26,13 +25,13 @@ class AtendimentoFluxosTest {
             var emergencia = new AtendimentoEmergencial(1, paciente, cirurgiao, prioridade);
 
             assertEquals(prioridade, emergencia.getPrioridade());
-            assertEquals(StatusEmergencia.AGUARDANDO_AVALIACAO, emergencia.getStatus());
+            assertEquals(StatusAtendimento.AGUARDANDO_AVALIACAO, emergencia.getStatus());
             assertThrows(IllegalStateException.class, emergencia::concluir);
             emergencia.iniciar(efetiva);
-            assertEquals(StatusEmergencia.INICIADO, emergencia.getStatus());
+            assertEquals(StatusAtendimento.EM_ANDAMENTO, emergencia.getStatus());
             assertEquals(efetiva, emergencia.getDataHoraInicio());
             emergencia.concluir();
-            assertEquals(StatusEmergencia.CONCLUIDO, emergencia.getStatus());
+            assertEquals(StatusAtendimento.CONCLUIDO, emergencia.getStatus());
         }
     }
 
@@ -47,7 +46,7 @@ class AtendimentoFluxosTest {
         var cirurgia = criarCirurgia();
 
         assertThrows(IllegalStateException.class, cirurgia::concluir);
-        assertEquals(StatusCirurgia.AGENDADO, cirurgia.getStatus());
+        assertEquals(StatusAtendimento.AGENDADO, cirurgia.getStatus());
     }
 
     @Test
@@ -57,11 +56,11 @@ class AtendimentoFluxosTest {
         assertSame(paciente, cirurgia.getPaciente());
         assertSame(cirurgiao, cirurgia.getProfissional());
         cirurgia.iniciar(efetiva);
-        assertEquals(StatusCirurgia.EM_ANDAMENTO, cirurgia.getStatus());
+        assertEquals(StatusAtendimento.EM_ANDAMENTO, cirurgia.getStatus());
         assertEquals(prevista, cirurgia.getDataHoraPrevista());
         assertEquals(efetiva, cirurgia.getDataHoraEfetiva());
         cirurgia.concluir();
-        assertEquals(StatusCirurgia.CONCLUIDO, cirurgia.getStatus());
+        assertEquals(StatusAtendimento.CONCLUIDO, cirurgia.getStatus());
     }
 
     @Test
@@ -71,7 +70,7 @@ class AtendimentoFluxosTest {
 
         assertThrows(IllegalStateException.class, () -> cirurgia.iniciar(efetiva));
         assertThrows(IllegalStateException.class, cirurgia::concluir);
-        assertEquals(StatusCirurgia.CANCELADO, cirurgia.getStatus());
+        assertEquals(StatusAtendimento.CANCELADO, cirurgia.getStatus());
     }
 
     @Test
@@ -94,7 +93,7 @@ class AtendimentoFluxosTest {
         cirurgia.iniciar(efetiva);
 
         assertThrows(IllegalStateException.class, cirurgia::cancelar);
-        assertEquals(StatusCirurgia.EM_ANDAMENTO, cirurgia.getStatus());
+        assertEquals(StatusAtendimento.EM_ANDAMENTO, cirurgia.getStatus());
     }
 
     private ProcedimentoCirurgico criarCirurgia() {

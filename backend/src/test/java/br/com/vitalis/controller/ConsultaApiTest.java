@@ -31,17 +31,17 @@ class ConsultaApiTest {
                 .content("""
                         {
                           "tipo": "ROTINA",
-                          "pacienteId": 7,
+                          "pacienteId": %d,
                           "profissionalId": %d,
                           "data": "2026-11-10",
                           "horario": "10:30",
                           "motivo": "Acompanhamento"
                         }
-                        """.formatted(profissionalId)))
+                        """.formatted(cadastrarPaciente("12345678907"), profissionalId)))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(jsonPath("$.consulta.status").value("AGENDADA"))
-                .andExpect(jsonPath("$.consulta.pacienteId").value(7))
+                .andExpect(jsonPath("$.consulta.pacienteId").isNumber())
                 .andReturn()
                 .getResponse()
                 .getHeader("Location");
@@ -79,14 +79,14 @@ class ConsultaApiTest {
                 .content("""
                         {
                           "tipo": "ESPECIALIZADA",
-                          "pacienteId": 8,
+                          "pacienteId": %d,
                           "profissionalId": %d,
                           "data": "2026-11-11",
                           "horario": "11:00",
                           "motivo": "Avaliação cardíaca",
                           "especialidade": "Cardiologia"
                         }
-                        """.formatted(profissionalId)))
+                        """.formatted(cadastrarPaciente("12345678908"), profissionalId)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.consulta.especialidade")
                         .value("Cardiologia"));
@@ -101,14 +101,14 @@ class ConsultaApiTest {
                 .content("""
                         {
                           "tipo": "ESPECIALIZADA",
-                          "pacienteId": 9,
+                          "pacienteId": %d,
                           "profissionalId": %d,
                           "data": "2026-11-11",
                           "horario": "11:00",
                           "motivo": "Avaliação",
                           "especialidade": "Cardiologia"
                         }
-                        """.formatted(clinicoId)))
+                        """.formatted(cadastrarPaciente("12345678909"), clinicoId)))
                 .andExpect(status().isConflict());
 
         long especialistaId = cadastrarEspecialista();
@@ -118,14 +118,14 @@ class ConsultaApiTest {
                 .content("""
                         {
                           "tipo": "ESPECIALIZADA",
-                          "pacienteId": 10,
+                          "pacienteId": %d,
                           "profissionalId": %d,
                           "data": "2026-11-11",
                           "horario": "11:30",
                           "motivo": "Avaliação",
                           "especialidade": "Neurologia"
                         }
-                        """.formatted(especialistaId)))
+                        """.formatted(cadastrarPaciente("12345678910"), especialistaId)))
                 .andExpect(status().isConflict());
     }
 
@@ -161,6 +161,14 @@ class ConsultaApiTest {
                         """))
                 .andExpect(status().isNotFound());
 
+        api.perform(post("/consultas")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"tipo":"ROTINA","pacienteId":999999,"profissionalId":%d,
+                         "data":"2026-11-10","horario":"10:30","motivo":"Retorno"}
+                        """.formatted(clinicoId)))
+                .andExpect(status().isNotFound());
+
         api.perform(get("/consultas/999999"))
                 .andExpect(status().isNotFound());
     }
@@ -174,13 +182,13 @@ class ConsultaApiTest {
                 .content("""
                         {
                           "tipo": "ROTINA",
-                          "pacienteId": 11,
+                          "pacienteId": %d,
                           "profissionalId": %d,
                           "data": "2026-11-12",
                           "horario": "09:00",
                           "motivo": "Retorno"
                         }
-                        """.formatted(clinicoId)))
+                        """.formatted(cadastrarPaciente("12345678911"), clinicoId)))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
@@ -196,6 +204,35 @@ class ConsultaApiTest {
                         {"observacoes": "Não deve concluir"}
                         """))
                 .andExpect(status().isConflict());
+    }
+
+    @Test
+    void impedeDoisAgendamentosParaOMesmoProfissionalEHorario() throws Exception {
+        long clinicoId = cadastrarClinico();
+        long pacienteId = cadastrarPaciente("12345678912");
+        String dados = """
+                {"tipo":"ROTINA","pacienteId":%d,"profissionalId":%d,
+                 "data":"2026-11-13","horario":"09:00","motivo":"Retorno"}
+                """.formatted(pacienteId, clinicoId);
+
+        api.perform(post("/consultas").contentType(MediaType.APPLICATION_JSON).content(dados))
+                .andExpect(status().isCreated());
+        api.perform(post("/consultas").contentType(MediaType.APPLICATION_JSON).content(dados))
+                .andExpect(status().isConflict());
+        api.perform(get("/consultas").param("pacienteId", String.valueOf(pacienteId)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1));
+    }
+
+    private long cadastrarPaciente(String cpf) throws Exception {
+        String localizacao = api.perform(post("/pacientes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"nome":"Paciente de teste","cpf":"%s"}
+                        """.formatted(cpf)))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getHeader("Location");
+        return Long.parseLong(localizacao.substring(localizacao.lastIndexOf('/') + 1));
     }
 
     private long cadastrarClinico() throws Exception {
