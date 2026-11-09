@@ -1,4 +1,4 @@
-package br.com.vitalis.profissionais;
+package br.com.vitalis.Consultas;
 
 public enum StatusConsulta {
     AGENDADA,

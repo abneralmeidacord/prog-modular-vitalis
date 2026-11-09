@@ -1,4 +1,4 @@
-package br.com.vitalis.profissionais;
+package br.com.vitalis.consultas;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -8,6 +8,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import org.junit.jupiter.api.Test;
+
+import br.com.vitalis.Consultas.ConsultaEspecializada;
+import br.com.vitalis.Consultas.ConsultaRotina;
+import br.com.vitalis.Consultas.StatusConsulta;
+import br.com.vitalis.profissionais.ClinicoGeral;
+import br.com.vitalis.profissionais.DadosInvalidosException;
+import br.com.vitalis.profissionais.Especialista;
 
 class ConsultaTest {
     private final ClinicoGeral clinico = new ClinicoGeral(

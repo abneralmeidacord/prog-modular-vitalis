@@ -1,7 +1,10 @@
-package br.com.vitalis.profissionais;
+package br.com.vitalis.Consultas;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+import br.com.vitalis.profissionais.DadosInvalidosException;
+import br.com.vitalis.profissionais.Especialista;
 
 public class ConsultaEspecializada extends Consulta{
     private final String especialidade;
@@ -10,7 +13,7 @@ public class ConsultaEspecializada extends Consulta{
         super(pacienteId, profissional, data, horario, motivo);
 
         this.especialidade =
-                Validacao.textoObrigatorio(especialidade, "Especialidade");
+                ValidacaoConsulta.textoObrigatorio(especialidade, "Especialidade");
 
         if (!profissional.getArea().equalsIgnoreCase(this.especialidade)) {
             throw new DadosInvalidosException(

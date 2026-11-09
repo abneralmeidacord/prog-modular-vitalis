@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
+import br.com.vitalis.Consultas.ConsultaClinica;
+
 class ProfissionalTest {
     private final LocalDateTime dataHora = LocalDateTime.of(2026, 11, 9, 10, 30);
 

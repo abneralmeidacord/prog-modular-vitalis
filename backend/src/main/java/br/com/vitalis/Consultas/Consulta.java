@@ -1,8 +1,11 @@
-package br.com.vitalis.profissionais;
+package br.com.vitalis.Consultas;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+
+import br.com.vitalis.profissionais.DadosInvalidosException;
+import br.com.vitalis.profissionais.Profissional;
 
 public abstract class Consulta {
     private final long pacienteId;
@@ -15,7 +18,7 @@ public abstract class Consulta {
 
     protected Consulta(long pacienteId, Profissional profissional, LocalDate data, LocalTime horario, String motivo) {
 
-        Validacao.pacienteObrigatorio(pacienteId);
+        ValidacaoConsulta.pacienteObrigatorio(pacienteId);
 
         if (profissional == null) {
             throw new DadosInvalidosException(
@@ -32,7 +35,7 @@ public abstract class Consulta {
         this.profissional = profissional;
         this.data = data;
         this.horario = horario;
-        this.motivo = Validacao.textoObrigatorio(motivo, "Motivo");
+        this.motivo = ValidacaoConsulta.textoObrigatorio(motivo, "Motivo");
         this.status = StatusConsulta.AGENDADA;
         this.observacoes = "";
     }
