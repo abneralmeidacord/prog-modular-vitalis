@@ -13,7 +13,7 @@ public class AtendimentoEmergencial extends Atendimento {
 
     public AtendimentoEmergencial(long id, Paciente paciente, Profissional profissional,
                                   PrioridadeEmergencia prioridade) {
-        super(id, paciente, profissional);
+        super(id, paciente, profissional, null);
         this.prioridade = Objects.requireNonNull(prioridade, "Prioridade obrigatória");
     }
 

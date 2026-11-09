@@ -1,47 +1,51 @@
 package br.com.vitalis.atendimentos;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import br.com.vitalis.geralExceptions.Validacao;
 import br.com.vitalis.pacientes.Paciente;
 import br.com.vitalis.profissionais.Profissional;
-
-import java.time.LocalDateTime;
-import java.util.Objects;
 
 public abstract class Atendimento {
     private final long id;
     private final Paciente paciente;
     private final Profissional profissional;
-    private String observacoes;
+    private final List<String> observacoes = new CopyOnWriteArrayList<>();
 
-    protected Atendimento(long id, Paciente paciente, Profissional profissional){
+    protected Atendimento(long id, Paciente paciente, Profissional profissional, String observacaoInicial) {
         this.id = id;
-        this.paciente = Object.requireNonNull(paciente, "Paciente obrigatório");
-        this.profissional = Objects.requireNonNull(profissional, "Profissional obrigatório");
-        this.observacoes = "";
+        this.paciente = Validacao.obrigatorio(paciente, "Paciente");
+        this.profissional = Validacao.obrigatorio(profissional, "Profissional responsável");
+        String observacao = Validacao.textoOpcional(observacaoInicial);
+        if (observacao != null) {
+            observacoes.add(observacao);
+        }
     }
 
-    public long getId(){
+    public long getId() {
         return id;
     }
 
-    public Paciente getPaciente(){
+    public Paciente getPaciente() {
         return paciente;
     }
 
-    public Profissional getProfissional(){
+    public Profissional getProfissional() {
         return profissional;
     }
 
-    public String getObservacoes(){
-        return observacoes;
+    public List<String> getObservacoes() {
+        return List.copyOf(observacoes);
     }
 
-    public void registrarObservacao(String texto){
-        if (texto == null || texto.isBlank()){
-            throw new IllegalArgumentException("Informe o texto da observação");
-        }
-
-        observacoes = observacoes.isEmpty() ? texto : observacoes + "\n" + texto;
+    public void registrarObservacao(String texto) {
+        observacoes.add(Validacao.textoObrigatorio(texto, "Observação"));
     }
 
+    @JsonIgnore
     public abstract LocalDateTime getDataHoraInicio();
 }

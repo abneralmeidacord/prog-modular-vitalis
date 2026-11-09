@@ -18,7 +18,7 @@ public class ProcedimentoCirurgico extends Atendimento {
     public ProcedimentoCirurgico(long id, Paciente paciente, Cirurgiao cirurgiao,
                                  String descricao, String tipo,
                                  LocalDateTime dataHoraPrevista) {
-        super(id, paciente, cirurgiao);
+        super(id, paciente, cirurgiao, null);
         this.descricao = validarTexto(descricao, "Descrição");
         this.tipo = validarTexto(tipo, "Tipo");
         this.dataHoraPrevista = Objects.requireNonNull(
