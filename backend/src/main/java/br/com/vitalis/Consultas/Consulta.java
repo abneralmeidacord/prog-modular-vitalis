@@ -79,7 +79,7 @@ public abstract class Consulta {
             }
         }
 
-        throw new DadosInvalidosException(
+        throw new ConsultaConflitoException(
                 "Operação inválida para uma consulta com status " + status + ".");
     }
 

@@ -9,6 +9,7 @@ import java.time.LocalTime;
 
 import org.junit.jupiter.api.Test;
 
+import br.com.vitalis.Consultas.ConsultaConflitoException;
 import br.com.vitalis.Consultas.ConsultaEspecializada;
 import br.com.vitalis.Consultas.ConsultaRotina;
 import br.com.vitalis.Consultas.StatusConsulta;
@@ -55,7 +56,7 @@ class ConsultaTest {
 
     @Test
     void rejeitaConsultaEspecializadaComAreaIncompativel() {
-        assertThrows(DadosInvalidosException.class, () ->
+        assertThrows(ConsultaConflitoException.class, () ->
                 new ConsultaEspecializada(
                         7, cardiologista,
                         LocalDate.of(2026, 11, 10),
@@ -98,7 +99,7 @@ class ConsultaTest {
         consulta.realizar();
         consulta.concluir("Concluída");
 
-        assertThrows(DadosInvalidosException.class, () ->
+        assertThrows(ConsultaConflitoException.class, () ->
                 consulta.reagendar(
                         LocalDate.of(2026, 11, 12),
                         LocalTime.of(14, 0)));
@@ -109,7 +110,7 @@ class ConsultaTest {
         ConsultaRotina consulta = criarConsultaRotina();
         consulta.cancelar();
 
-        assertThrows(DadosInvalidosException.class, () ->
+        assertThrows(ConsultaConflitoException.class, () ->
                 consulta.concluir("Não deve ser registrado"));
 
         assertEquals(StatusConsulta.CANCELADA, consulta.getStatus());

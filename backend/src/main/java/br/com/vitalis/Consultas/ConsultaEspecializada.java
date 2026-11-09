@@ -16,7 +16,7 @@ public class ConsultaEspecializada extends Consulta{
                 ValidacaoConsulta.textoObrigatorio(especialidade, "Especialidade");
 
         if (!profissional.getArea().equalsIgnoreCase(this.especialidade)) {
-            throw new DadosInvalidosException(
+            throw new ConsultaConflitoException(
                     "A especialidade da consulta não corresponde à área do profissional.");
         }
     }
@@ -24,4 +24,6 @@ public class ConsultaEspecializada extends Consulta{
     public String getEspecialidade() {
         return especialidade;
     }
+
+    
 }

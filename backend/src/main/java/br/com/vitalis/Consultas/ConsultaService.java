@@ -108,7 +108,7 @@ public class ConsultaService {
             Profissional profissional) {
 
         if (!(profissional instanceof ClinicoGeral clinico)) {
-            throw new DadosInvalidosException(
+            throw new ConsultaConflitoException(
                     "Consulta de rotina exige um clínico geral.");
         }
 
@@ -125,7 +125,7 @@ public class ConsultaService {
             Profissional profissional) {
 
         if (!(profissional instanceof Especialista especialista)) {
-            throw new DadosInvalidosException(
+            throw new ConsultaConflitoException(
                     "Consulta especializada exige um especialista.");
         }
 
