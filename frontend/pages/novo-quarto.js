@@ -1,8 +1,12 @@
+import { useState } from 'react';
+import { tiposQuarto } from '../lib/format';
 import FormCard from '../components/FormCard/FormCard';
 import PageHeader from '../components/PageHeader/PageHeader';
 import RulesCard from '../components/RulesCard/RulesCard';
 
 export default function NovoQuarto() {
+  const [tipo, setTipo] = useState('ENFERMARIA');
+
   return (
     <section>
       <PageHeader
@@ -11,27 +15,28 @@ export default function NovoQuarto() {
         description="Configure capacidade para receber internações."
         action={{ href: "/quartos", label: "← Voltar para quartos", variant: "ghost" }}
       />
-      <FormCard description="Quartos ocupados não podem exceder sua capacidade." submitLabel="Salvar quarto">
+      <FormCard endpoint="/quartos" destination="/quartos"
+        toPayload={fields => ({ ...fields, capacidade: Number(fields.capacidade) })}
+        description="Quartos ocupados não podem exceder sua capacidade." submitLabel="Salvar quarto">
         <label>
           Número do quarto
-          <input required placeholder="Ex.: 101" />
+          <input name="numero" required placeholder="Ex.: 101" />
         </label>
         <label>
           Andar
-          <input placeholder="Ex.: 1º andar" />
+          <input name="andar" placeholder="Ex.: 1º andar" />
         </label>
         <label>
           Tipo
-          <select>
-            <option>Enfermaria</option>
-            <option>Isolamento</option>
-            <option>UTI</option>
-            <option>Suíte</option>
+          <select name="tipo" value={tipo} onChange={event => setTipo(event.target.value)}>
+            {Object.entries(tiposQuarto).map(([value, quarto]) => (
+              <option key={value} value={value}>{quarto.label}</option>
+            ))}
           </select>
         </label>
         <label>
           Quantidade de leitos
-          <input type="number" min="1" max="8" defaultValue="2" />
+          <input name="capacidade" type="number" min="1" max={tiposQuarto[tipo].capacidade} defaultValue="1" required />
         </label>
       </FormCard>
       <RulesCard

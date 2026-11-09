@@ -11,30 +11,36 @@ export default function NovoPaciente() {
         description="Cadastre a identidade e os contatos do paciente."
         action={{ href: "/pacientes", label: "← Voltar para pacientes", variant: "ghost" }}
       />
-      <FormCard description="O paciente poderá ser vinculado a várias consultas e internações." submitLabel="Salvar paciente">
+      <FormCard endpoint="/pacientes" destination="/pacientes"
+        toPayload={fields => ({ ...fields, dataNascimento: fields.dataNascimento || null })}
+        description="O paciente poderá ser vinculado a várias consultas e internações." submitLabel="Salvar paciente">
         <label>
           Nome completo
-          <input required placeholder="Ex.: Mariana Alves" />
+          <input name="nome" required placeholder="Ex.: Mariana Alves" />
         </label>
         <label>
           CPF
-          <input required placeholder="000.000.000-00" />
+          <input name="cpf" required placeholder="000.000.000-00" />
         </label>
         <label>
           Data de nascimento
-          <input type="date" />
+          <input name="dataNascimento" type="date" />
         </label>
         <label>
           Telefone
-          <input placeholder="(00) 00000-0000" />
+          <input name="telefone" type="tel" placeholder="(00) 00000-0000" />
+        </label>
+        <label>
+          E-mail
+          <input name="email" type="email" />
         </label>
         <label data-wide="true">
           Endereço
-          <input placeholder="Rua, número, bairro e cidade" />
+          <input name="endereco" placeholder="Rua, número, bairro e cidade" />
         </label>
         <label data-wide="true">
           Observações
-          <textarea placeholder="Informações relevantes para o atendimento" />
+          <textarea name="observacoes" placeholder="Informações relevantes para o atendimento" />
         </label>
       </FormCard>
       <RulesCard

@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import FormCard from '../components/FormCard/FormCard';
 import PageHeader from '../components/PageHeader/PageHeader';
 import RulesCard from '../components/RulesCard/RulesCard';
 
 export default function NovoProfissional() {
+  const [categoria, setCategoria] = useState('CLINICO_GERAL');
+
   return (
     <section>
       <PageHeader
@@ -11,34 +14,39 @@ export default function NovoProfissional() {
         description="Registre a equipe que poderá assumir atendimentos."
         action={{ href: "/profissionais", label: "← Voltar para profissionais", variant: "ghost" }}
       />
-      <FormCard description="O profissional ficará disponível para vínculo em consultas." submitLabel="Salvar profissional">
+      <FormCard endpoint="/profissionais" destination="/profissionais" description="O profissional ficará disponível para vínculo em consultas." submitLabel="Salvar profissional">
         <label>
           Nome completo
-          <input required placeholder="Ex.: Dra. Helena Martins" />
+          <input name="nome" required placeholder="Ex.: Dra. Helena Martins" />
         </label>
         <label>
           CRM / registro
-          <input required placeholder="Ex.: CRM 48291" />
+          <input name="registro" required placeholder="Ex.: CRM 48291" />
         </label>
         <label>
-          Especialidade
-          <select defaultValue="">
-            <option value="">Selecione</option>
-            <option>Cardiologia</option>
-            <option>Clínica geral</option>
-            <option>Ortopedia</option>
-            <option>Neurologia</option>
+          Categoria
+          <select name="categoria" value={categoria} onChange={event => setCategoria(event.target.value)}>
+            <option value="CLINICO_GERAL">Clínico geral</option>
+            <option value="ESPECIALISTA">Especialista</option>
+            <option value="CIRURGIAO">Cirurgião</option>
           </select>
         </label>
+        {categoria === 'ESPECIALISTA' && (
+          <label>Especialidade<input name="especialidade" required placeholder="Ex.: Cardiologia" /></label>
+        )}
+        {categoria === 'CIRURGIAO' && (
+          <label>Área cirúrgica<input name="areaCirurgica" required placeholder="Ex.: Cirurgia geral" /></label>
+        )}
+        <label>Telefone<input name="telefone" type="tel" required /></label>
         <label>
           E-mail profissional
-          <input type="email" placeholder="profissional@hospital.com" />
+          <input name="email" type="email" required placeholder="profissional@hospital.com" />
         </label>
       </FormCard>
       <RulesCard
         title="Regras desta tela"
         items={[
-          "Nome, registro e especialidade são obrigatórios.",
+          "Nome, registro, telefone e e-mail são obrigatórios.",
           "Um profissional não pode ter dois atendimentos no mesmo horário.",
         ]}
       />

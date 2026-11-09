@@ -15,21 +15,18 @@ const groups = [
         href: '/pacientes',
         icon: '♙',
         label: 'Pacientes',
-        count: 248,
-        related: ['/novo-paciente', '/ficha-mariana', '/ficha-rafael'],
+        related: ['/novo-paciente', '/pacientes/[id]'],
       },
       {
         href: '/profissionais',
         icon: '✚',
         label: 'Profissionais',
-        count: 42,
         related: ['/novo-profissional'],
       },
       {
         href: '/quartos',
         icon: '□',
         label: 'Quartos',
-        count: 36,
         related: ['/novo-quarto'],
       },
     ],
@@ -41,14 +38,12 @@ const groups = [
         href: '/consultas',
         icon: '◷',
         label: 'Consultas',
-        count: 18,
         related: ['/nova-consulta'],
       },
       {
         href: '/internacoes',
         icon: '⌂',
         label: 'Internações',
-        count: 12,
         related: ['/nova-internacao'],
       },
       { href: '/historico', icon: '≡', label: 'Histórico médico' },
@@ -80,7 +75,7 @@ export default function Sidebar() {
         {groups.map(({ title, items }) => (
           <div className={styles.navGroup} key={title}>
             <small className={styles.navTitle}>{title}</small>
-            {items.map(({ href, icon, label, count, related }) => {
+            {items.map(({ href, icon, label, related }) => {
               const current = pathname === href;
               const active = current || related?.includes(pathname);
 
@@ -94,7 +89,6 @@ export default function Sidebar() {
                 >
                   <span aria-hidden="true">{icon}</span>
                   <span>{label}</span>
-                  {count && <em>{count}</em>}
                 </Link>
               );
             })}

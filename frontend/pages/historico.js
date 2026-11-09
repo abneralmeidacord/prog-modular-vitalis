@@ -1,28 +1,36 @@
-import { historicoMariana } from '../data/historico';
-import Avatar from '../components/Avatar/Avatar';
+import { useRouter } from 'next/router';
+import CadastroSelect from '../components/CadastroSelect/CadastroSelect';
 import Button from '../components/Button/Button';
 import PageHeader from '../components/PageHeader/PageHeader';
-import PatientCard from '../components/PatientCard/PatientCard';
-import Timeline from '../components/Timeline/Timeline';
-import styles from '../styles/PageContent.module.css';
+import RequestStatus from '../components/RequestStatus/RequestStatus';
+import { useApi } from '../lib/api';
+import styles from '../components/FormCard/FormCard.module.css';
 
 export default function Historico() {
+  const router = useRouter();
+  const pacientes = useApi('/pacientes');
+
+  function abrirFicha(event) {
+    event.preventDefault();
+    const id = new FormData(event.currentTarget).get('pacienteId');
+    if (id) router.push('/pacientes/' + id);
+  }
+
   return (
     <section>
-      <PageHeader
-        eyebrow="Prontuários"
-        title="Histórico médico"
-        description="Uma visão cronológica dos atendimentos e observações relevantes."
-      />
-      <div className={`${styles.history} surface`}>
-        <PatientCard as="div">
-          <Avatar tone="violet" size="large">MA</Avatar>
-          <h2>Mariana Alves</h2>
-          <p>CPF •••.482.190-•• · 34 anos</p>
-          <Button href="/ficha-mariana" variant="secondary">Abrir ficha completa</Button>
-        </PatientCard>
-        <Timeline events={historicoMariana} />
-      </div>
+      <PageHeader eyebrow="Prontuários" title="Histórico médico"
+        description="Selecione um paciente para consultar seus atendimentos." />
+      <RequestStatus request={pacientes} empty="Nenhum paciente cadastrado." />
+      {Boolean(pacientes.data?.length) && (
+        <form className={'surface ' + styles.formCard} onSubmit={abrirFicha}>
+          <div className={styles.formGrid}>
+            <CadastroSelect label="Paciente" name="pacienteId" options={pacientes.data} />
+          </div>
+          <div className={styles.formFooter}>
+            <Button type="submit">Abrir histórico</Button>
+          </div>
+        </form>
+      )}
     </section>
   );
 }
