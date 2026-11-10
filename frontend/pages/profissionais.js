@@ -1,9 +1,14 @@
+import { useApi } from '../lib/api';
+import { iniciais } from '../lib/format';
+import RequestStatus from '../components/RequestStatus/RequestStatus';
 import Avatar from '../components/Avatar/Avatar';
 import PageHeader from '../components/PageHeader/PageHeader';
 import RulesCard from '../components/RulesCard/RulesCard';
 import styles from '../styles/PageContent.module.css';
 
 export default function Profissionais() {
+  const profissionais = useApi('/profissionais');
+
   return (
     <section>
       <PageHeader
@@ -16,33 +21,17 @@ export default function Profissionais() {
         <article className={`surface ${styles.entity}`}>
           <div className={styles.sectionHead}>
             <h2>Equipe médica</h2>
-            <span className={styles.badge}>42 ativos</span>
+            {profissionais.data && <span className={styles.badge}>{profissionais.data.filter(item => item.disponivel).length} disponíveis</span>}
           </div>
           <div className={styles.team}>
-            <p>
-              <Avatar tone="violet">HM</Avatar>
-              <span>
-                <b>Dra. Helena Martins</b>
-                <small>Cardiologia · CRM 48291</small>
-              </span>
-              <span className={styles.availability}>● Disponível</span>
-            </p>
-            <p>
-              <Avatar>GN</Avatar>
-              <span>
-                <b>Dr. Gustavo Nunes</b>
-                <small>Ortopedia · CRM 39104</small>
-              </span>
-              <span className={styles.availability}>● Em atendimento</span>
-            </p>
-            <p>
-              <Avatar tone="peach">PM</Avatar>
-              <span>
-                <b>Dra. Paula Mendes</b>
-                <small>Clínica geral · CRM 51782</small>
-              </span>
-              <span className={styles.availability}>● Disponível</span>
-            </p>
+            <RequestStatus request={profissionais} empty="Nenhum profissional cadastrado." />
+            {profissionais.data?.map(profissional => (
+              <p key={profissional.id}>
+                <Avatar>{iniciais(profissional.nome)}</Avatar>
+                <span><b>{profissional.nome}</b><small>{profissional.area} · {profissional.registro}</small></span>
+                <span className={styles.availability}>{profissional.disponivel ? 'Disponível' : 'Indisponível'}</span>
+              </p>
+            ))}
           </div>
         </article>
         <RulesCard
